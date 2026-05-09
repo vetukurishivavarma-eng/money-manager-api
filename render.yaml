@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: money-manager-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    buildCommand: cd backend && mvn clean package -DskipTests
+    healthCheckPath: /
+    healthCheckInterval: 30
+    autoDeploy: true
