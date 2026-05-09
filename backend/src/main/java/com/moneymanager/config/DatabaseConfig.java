@@ -39,15 +39,13 @@ public class DatabaseConfig {
 
             // Parse host, port, database from after @host:port/db?query
             int dbStart = afterCredentials.indexOf("/");
-            int queryStart = afterCredentials.indexOf("?");
 
             String hostPort = afterCredentials.substring(0, dbStart);
-            String databaseWithQuery = afterCredentials.substring(dbStart + 1);
+            String database = afterCredentials.substring(dbStart + 1);
 
-            // Remove query params from database name
-            String database = databaseWithQuery;
-            if (queryStart > 0) {
-                database = databaseWithQuery.substring(0, queryStart);
+            int qIdx = database.indexOf("?");
+            if (qIdx > 0) {
+                database = database.substring(0, qIdx);
             }
 
             // Parse host and port
