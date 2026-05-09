@@ -8,7 +8,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
+import java.net.URLEncoder;
 
 @Configuration
 public class DatabaseConfig {
@@ -21,36 +21,47 @@ public class DatabaseConfig {
         try {
             HikariConfig config = new HikariConfig();
 
-            // Format: postgresql://username:password@host:port/database?sslmode=require
             String url = databaseUrl.trim();
 
-            // Remove protocol
-            int atIndex = url.indexOf("@");
-            int colonIndex = url.indexOf(":");
-            int slashAfterProtocol = url.indexOf("//");
+            // Remove protocol prefix
+            int authorityStart = url.indexOf("://");
+            String authority = url.substring(authorityStart + 3);
 
-            String userInfo = url.substring(slashAfterProtocol + 2, atIndex);
-            String afterHost = url.substring(atIndex + 1);
+            // Split into credentials and rest by the LAST @ before :port pattern
+            // The password may contain @, so we look for @ followed by hostname:port
+            int lastAtIndex = authority.lastIndexOf("@");
+            String credentials = authority.substring(0, lastAtIndex);
+            String afterCredentials = authority.substring(lastAtIndex + 1);
 
-            // Parse username and password
-            String[] userParts = userInfo.split(":");
-            String username = userParts[0];
-            String password = URLDecoder.decode(userParts[1], StandardCharsets.UTF_8);
+            // Split credentials by the first : to get username:password
+            int colonIndex = credentials.indexOf(":");
+            String username = credentials.substring(0, colonIndex);
+            String password = URLDecoder.decode(credentials.substring(colonIndex + 1));
 
-            // Parse host, port, database
-            int portSep = afterHost.indexOf(":");
-            int dbSep = afterHost.indexOf("/");
+            // Parse host, port, database from after @host:port/db?query
+            int dbStart = afterCredentials.indexOf("/");
+            int queryStart = afterCredentials.indexOf("?");
 
+            String hostPort = afterCredentials.substring(0, dbStart);
+            String databaseWithQuery = afterCredentials.substring(dbStart + 1);
+
+            // Remove query params from database name
+            String database = databaseWithQuery;
+            if (queryStart > 0) {
+                database = databaseWithQuery.substring(0, queryStart);
+            }
+
+            // Parse host and port
+            int portSep = hostPort.indexOf(":");
             String host;
             int port;
-            String database;
 
-            if (portSep > 0 && dbSep > 0) {
-                host = afterHost.substring(0, portSep);
-                port = Integer.parseInt(afterHost.substring(portSep + 1, dbSep));
-                database = afterHost.substring(dbSep + 1);
+            if (portSep > 0) {
+                host = hostPort.substring(0, portSep);
+                port = Integer.parseInt(hostPort.substring(portSep + 1));
             } else {
-                throw new RuntimeException("Invalid DATABASE_URL format");
+                host = hostPort;
+                port = 5432;
             }
 
             String jdbcUrl = String.format("jdbc:postgresql://%s:%d/%s?sslmode=require", host, port, database);

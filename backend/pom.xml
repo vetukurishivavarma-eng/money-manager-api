@@ -13,7 +13,7 @@
 
     <groupId>com.moneymanager</groupId>
     <artifactId>backend</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>MoneyManagerBackend</name>
     <description>Money Management Application Backend</description>
 
