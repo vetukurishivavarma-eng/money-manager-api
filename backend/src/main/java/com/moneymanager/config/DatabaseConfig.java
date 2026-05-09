@@ -7,6 +7,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
+import java.net.URI;
 
 @Configuration
 public class DatabaseConfig {
@@ -16,16 +17,30 @@ public class DatabaseConfig {
 
     @Bean
     public DataSource dataSource() {
-        HikariConfig config = new HikariConfig();
+        try {
+            HikariConfig config = new HikariConfig();
 
-        // Convert postgresql:// to jdbc:postgresql://
-        String jdbcUrl = "jdbc:" + databaseUrl;
+            // Parse the full URL properly
+            URI uri = new URI(databaseUrl);
 
-        config.setJdbcUrl(jdbcUrl);
-        config.setMaximumPoolSize(3);
-        config.setMinimumIdle(1);
-        config.setConnectionTimeout(30000);
+            String host = uri.getHost();
+            int port = uri.getPort();
+            String database = uri.getPath().replace("/", "");
+            String username = uri.getUserInfo().split(":")[0];
+            String password = uri.getUserInfo().split(":")[1];
 
-        return new HikariDataSource(config);
+            String jdbcUrl = String.format("jdbc:postgresql://%s:%d/%s?sslmode=require", host, port, database);
+
+            config.setJdbcUrl(jdbcUrl);
+            config.setUsername(username);
+            config.setPassword(password);
+            config.setMaximumPoolSize(3);
+            config.setMinimumIdle(1);
+            config.setConnectionTimeout(30000);
+
+            return new HikariDataSource(config);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse DATABASE_URL: " + databaseUrl, e);
+        }
     }
 }
