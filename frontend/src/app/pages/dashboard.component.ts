@@ -23,6 +23,7 @@ import { TransactionService, Transaction, Summary } from '../transaction.service
             <span class="user-name">{{ currentUser?.name }}</span>
             <span class="user-email">{{ currentUser?.email }}</span>
           </div>
+          <a routerLink="/profile" class="btn-profile">Profile</a>
           <button class="btn-logout" (click)="logout()">Logout</button>
         </div>
       </header>
@@ -265,6 +266,23 @@ import { TransactionService, Transaction, Summary } from '../transaction.service
       cursor: pointer;
       font-size: 12px;
       transition: all 0.3s;
+    }
+
+    .btn-profile {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      text-decoration: none;
+      transition: all 0.3s;
+      margin-right: 0.5rem;
+    }
+
+    .btn-profile:hover {
+      background: rgba(59, 130, 246, 0.4);
     }
 
     .btn-logout:hover {

@@ -21,6 +21,7 @@ export interface User {
   name: string;
   authProvider: string;
   userId: number;
+  profileImageUrl?: string;
 }
 
 export interface AuthResponse {
@@ -29,13 +30,15 @@ export interface AuthResponse {
   name: string;
   authProvider: string;
   userId: number;
+  profileImageUrl?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionService {
-  private apiUrl = 'http://localhost:8080/api';
+  // Using the same backend as the mobile app (Supabase PostgreSQL database)
+  private apiUrl = 'https://money-manager-api-f454.onrender.com/api';
   private tokenKey = 'auth_token';
   private userKey = 'auth_user';
 
@@ -62,7 +65,13 @@ export class TransactionService {
 
   storeAuthData(data: AuthResponse): void {
     localStorage.setItem(this.tokenKey, data.token);
-    const user: User = { email: data.email, name: data.name, authProvider: data.authProvider, userId: data.userId };
+    const user: User = {
+      email: data.email,
+      name: data.name,
+      authProvider: data.authProvider,
+      userId: data.userId,
+      profileImageUrl: data.profileImageUrl
+    };
     localStorage.setItem(this.userKey, JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
@@ -79,6 +88,14 @@ export class TransactionService {
 
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  updateProfileImage(imageUrl: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/profile/image`, { profileImageUrl: imageUrl }, { headers: this.getHeaders() });
+  }
+
+  updateName(name: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/profile/name`, { name }, { headers: this.getHeaders() });
   }
 
   register(email: string, password: string, name: string): Observable<AuthResponse> {
