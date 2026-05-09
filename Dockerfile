@@ -10,7 +10,5 @@ WORKDIR /app
 COPY --from=build /app/backend/target/*.jar app.jar
 
 ENV PORT=10000
-ENV DATABASE_URL=postgresql://postgres.mlpleqpoaxdexeprceqm:Shivapoojitha@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require
-
 EXPOSE 10000
 ENTRYPOINT ["java", "-jar", "app.jar"]
