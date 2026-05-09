@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: moneyflow-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    region: oregon
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
