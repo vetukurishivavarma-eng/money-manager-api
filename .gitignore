@@ -1,0 +1,12 @@
+# Maven
+backend/target/
+backend/*.jar
+backend/*.jar.original
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Logs
+*.log
