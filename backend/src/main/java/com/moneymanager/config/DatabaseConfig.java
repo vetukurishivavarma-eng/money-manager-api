@@ -19,13 +19,12 @@ public class DatabaseConfig {
         HikariConfig config = new HikariConfig();
 
         // Convert postgresql:// to jdbc:postgresql://
-        String jdbcUrl = databaseUrl.replace("postgresql://", "jdbc:postgresql://");
+        String jdbcUrl = "jdbc:" + databaseUrl;
 
         config.setJdbcUrl(jdbcUrl);
         config.setMaximumPoolSize(3);
         config.setMinimumIdle(1);
         config.setConnectionTimeout(30000);
-        config.setDriverClassName("org.postgresql.Driver");
 
         return new HikariDataSource(config);
     }
