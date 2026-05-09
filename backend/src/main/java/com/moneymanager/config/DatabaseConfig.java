@@ -7,7 +7,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
-import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class DatabaseConfig {
@@ -20,14 +21,37 @@ public class DatabaseConfig {
         try {
             HikariConfig config = new HikariConfig();
 
-            // Parse the full URL properly
-            URI uri = new URI(databaseUrl);
+            // Format: postgresql://username:password@host:port/database?sslmode=require
+            String url = databaseUrl.trim();
 
-            String host = uri.getHost();
-            int port = uri.getPort();
-            String database = uri.getPath().replace("/", "");
-            String username = uri.getUserInfo().split(":")[0];
-            String password = uri.getUserInfo().split(":")[1];
+            // Remove protocol
+            int atIndex = url.indexOf("@");
+            int colonIndex = url.indexOf(":");
+            int slashAfterProtocol = url.indexOf("//");
+
+            String userInfo = url.substring(slashAfterProtocol + 2, atIndex);
+            String afterHost = url.substring(atIndex + 1);
+
+            // Parse username and password
+            String[] userParts = userInfo.split(":");
+            String username = userParts[0];
+            String password = URLDecoder.decode(userParts[1], StandardCharsets.UTF_8);
+
+            // Parse host, port, database
+            int portSep = afterHost.indexOf(":");
+            int dbSep = afterHost.indexOf("/");
+
+            String host;
+            int port;
+            String database;
+
+            if (portSep > 0 && dbSep > 0) {
+                host = afterHost.substring(0, portSep);
+                port = Integer.parseInt(afterHost.substring(portSep + 1, dbSep));
+                database = afterHost.substring(dbSep + 1);
+            } else {
+                throw new RuntimeException("Invalid DATABASE_URL format");
+            }
 
             String jdbcUrl = String.format("jdbc:postgresql://%s:%d/%s?sslmode=require", host, port, database);
 

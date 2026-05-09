@@ -41,7 +41,7 @@ public class AuthController {
         user = userRepository.save(user);
 
         String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId()));
+        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId(), user.getProfileImageUrl()));
     }
 
     @PostMapping("/login")
@@ -61,7 +61,7 @@ public class AuthController {
         }
 
         String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId()));
+        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId(), user.getProfileImageUrl()));
     }
 
     @GetMapping("/me")
@@ -70,7 +70,7 @@ public class AuthController {
         if (principal instanceof Long) {
             Long userId = (Long) principal;
             return userRepository.findById(userId)
-                    .map(user -> ResponseEntity.ok(new AuthResponse(null, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId())))
+                    .map(user -> ResponseEntity.ok(new AuthResponse(null, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId(), user.getProfileImageUrl())))
                     .orElse(ResponseEntity.notFound().build());
         }
         Map<String, Object> result = new HashMap<>();
@@ -101,7 +101,7 @@ public class AuthController {
         }
 
         String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId()));
+        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId(), user.getProfileImageUrl()));
     }
 
     @GetMapping("/check")

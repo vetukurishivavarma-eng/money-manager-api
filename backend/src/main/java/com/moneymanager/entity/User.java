@@ -26,6 +26,9 @@ public class User {
     @Column(name = "auth_provider")
     private String authProvider; // GOOGLE, EMAIL
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -56,4 +59,6 @@ public class User {
     public void setAuthProvider(String authProvider) { this.authProvider = authProvider; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public String getProfileImageUrl() { return profileImageUrl; }
+    public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
 }

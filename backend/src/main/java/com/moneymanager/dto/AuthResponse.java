@@ -6,6 +6,7 @@ public class AuthResponse {
     private String name;
     private String authProvider;
     private Long userId;
+    private String profileImageUrl;
 
     public AuthResponse() {}
 
@@ -15,6 +16,15 @@ public class AuthResponse {
         this.name = name;
         this.authProvider = authProvider;
         this.userId = userId;
+    }
+
+    public AuthResponse(String token, String email, String name, String authProvider, Long userId, String profileImageUrl) {
+        this.token = token;
+        this.email = email;
+        this.name = name;
+        this.authProvider = authProvider;
+        this.userId = userId;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getToken() { return token; }
@@ -27,4 +37,6 @@ public class AuthResponse {
     public void setAuthProvider(String authProvider) { this.authProvider = authProvider; }
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
+    public String getProfileImageUrl() { return profileImageUrl; }
+    public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
 }

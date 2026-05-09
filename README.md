@@ -40,7 +40,8 @@ A Spring Boot REST API for the Money Manager mobile application with Supabase Po
      - **Build Command**: `cd backend && ./mvnw clean package -DskipTests`
      - **Start Command**: `java -jar backend/target/backend-1.0.0.jar`
    - Add Environment Variables:
-     - `DATABASE_URL`: `postgresql://postgres.mlpleqpoaxdexeprceqm:Shivapoojitha@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require`
+     - `DATABASE_URL`: `postgresql://postgres.mlpleqpoaxdexeprceqm:Shivapoojitha%40aws@aws-1-ap-south-1.pooler.supabase.com:5432/postgres?sslmode=require`
+       **Important**: The `@` in your password must be encoded as `%40` so use `%40aws` instead of `@aws`
      - `DDL_AUTO`: `update`
      - `JWT_SECRET`: (generate a random 64+ char string)
 
