@@ -45,11 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // Allow multiple origins including localhost and any deployed frontend
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:4200",
-            "https://*.onrender.com",
-            "*"  // Allow all for cross-platform access
-        ));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
