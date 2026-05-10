@@ -3,6 +3,8 @@ com\moneymanager\dto\AuthRequest.class
 com\moneymanager\security\CustomUserDetailsService.class
 com\moneymanager\entity\Transaction.class
 com\moneymanager\repository\UserRepository.class
+com\moneymanager\config\DatabaseConfig.class
+com\moneymanager\controller\ProfileController.class
 com\moneymanager\security\JwtAuthenticationFilter.class
 com\moneymanager\service\TransactionService.class
 com\moneymanager\security\JwtTokenProvider.class

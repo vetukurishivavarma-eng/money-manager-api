@@ -1,4 +1,5 @@
 C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\security\JwtTokenProvider.java
+C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\config\DatabaseConfig.java
 C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\security\JwtAuthenticationFilter.java
 C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\security\SecurityConfig.java
 C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\dto\AuthRequest.java
@@ -12,4 +13,5 @@ C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\controller\A
 C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\repository\UserRepository.java
 C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\dto\AuthResponse.java
 C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\service\TransactionService.java
+C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\controller\ProfileController.java
 C:\Users\Shiva\money-manager\backend\src\main\java\com\moneymanager\entity\User.java
