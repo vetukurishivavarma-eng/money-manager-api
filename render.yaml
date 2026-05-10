@@ -7,3 +7,18 @@ services:
     healthCheckPath: /
     healthCheckInterval: 30
     autoDeploy: true
+
+  - type: web
+    name: money-manager-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist/frontend/browser
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    routes:
+      - route: /*
+        policy: cache-full
+    healthCheckPath: /
+    autoDeploy: true
