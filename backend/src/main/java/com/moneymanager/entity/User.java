@@ -26,7 +26,9 @@ public class User {
     @Column(name = "auth_provider")
     private String authProvider; // GOOGLE, EMAIL
 
-    @Column(name = "profile_image_url")
+    // @Lob forces CLOB/TEXT storage in PostgreSQL - permanent fix for large base64 images
+    @Lob
+    @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
     @Column(name = "created_at")
