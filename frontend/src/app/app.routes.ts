@@ -1,16 +1,11 @@
 import { Routes } from '@angular/router';
-import { LandingComponent } from './pages/landing.component';
-import { LoginComponent } from './pages/login.component';
-import { RegisterComponent } from './pages/register.component';
-import { DashboardComponent } from './pages/dashboard.component';
-import { ProfileComponent } from './pages/profile.component';
 import { authGuard, guestGuard } from './auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: LandingComponent },
-  { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
-  { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+  { path: '', loadComponent: () => import('./pages/landing.component').then(m => m.LandingComponent) },
+  { path: 'login', loadComponent: () => import('./pages/login.component').then(m => m.LoginComponent), canActivate: [guestGuard] },
+  { path: 'register', loadComponent: () => import('./pages/register.component').then(m => m.RegisterComponent), canActivate: [guestGuard] },
+  { path: 'dashboard', loadComponent: () => import('./pages/dashboard.component').then(m => m.DashboardComponent), canActivate: [authGuard] },
+  { path: 'profile', loadComponent: () => import('./pages/profile.component').then(m => m.ProfileComponent), canActivate: [authGuard] },
   { path: '**', redirectTo: '' }
 ];

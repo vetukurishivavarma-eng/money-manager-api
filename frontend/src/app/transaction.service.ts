@@ -87,7 +87,55 @@ export class TransactionService {
   }
 
   getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
+    const user = this.currentUserSubject.value;
+    if (!user || !user.userId) {
+      return this.getStoredUser();
+    }
+    return user;
+  }
+
+  refreshProfile(): Promise<User | null> {
+    const token = localStorage.getItem(this.tokenKey);
+    if (!token) {
+      return Promise.resolve(null);
+    }
+
+    const storedUser = this.getStoredUser();
+
+    // First set local user immediately
+    if (storedUser) {
+      this.currentUserSubject.next(storedUser);
+    }
+
+    return new Promise((resolve) => {
+      this.http.get<any>(`${this.apiUrl}/auth/me`, { headers: this.getHeaders() }).subscribe({
+        next: (data) => {
+          if (data.userId) {
+            const updatedUser: User = {
+              email: data.email || storedUser?.email || '',
+              name: data.name || storedUser?.name || '',
+              authProvider: data.authProvider || storedUser?.authProvider || 'EMAIL',
+              userId: data.userId,
+              profileImageUrl: data.profileImageUrl
+            };
+            this.storeAuthData({
+              token: token,
+              email: updatedUser.email,
+              name: updatedUser.name,
+              authProvider: updatedUser.authProvider,
+              userId: updatedUser.userId,
+              profileImageUrl: updatedUser.profileImageUrl
+            });
+            resolve(updatedUser);
+          } else {
+            resolve(storedUser);
+          }
+        },
+        error: () => {
+          resolve(storedUser);
+        }
+      });
+    });
   }
 
   updateProfileImage(imageUrl: string): Observable<any> {

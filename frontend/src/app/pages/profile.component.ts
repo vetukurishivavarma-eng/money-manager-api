@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -23,7 +23,7 @@ import { TransactionService, User } from '../transaction.service';
         <div class="profile-card">
           <div class="avatar-section">
             <div class="avatar" (click)="triggerFileInput()">
-              @if (profileImageUrl) {
+              @if (hasProfileImage()) {
                 <img [src]="profileImageUrl" alt="Profile" class="avatar-image">
               } @else {
                 <span class="avatar-text">{{ getInitials() }}</span>
@@ -80,7 +80,7 @@ import { TransactionService, User } from '../transaction.service';
           <button class="upload-button" (click)="triggerFileInput()">
             📷 Change Profile Picture
           </button>
-          @if (profileImageUrl) {
+          @if (hasProfileImage()) {
             <p class="image-status">✓ Profile picture saved</p>
           }
         </div>
@@ -493,24 +493,43 @@ import { TransactionService, User } from '../transaction.service';
 })
 export class ProfileComponent {
   currentUser: User | null = null;
-  profileImageUrl: string | undefined;
+  profileImageUrl: string | null = null;
   showEditModal = false;
   editName = '';
   saving = false;
 
   constructor(
     private transactionService: TransactionService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
+    private router: Router
   ) {
-    this.currentUser = this.transactionService.getCurrentUser();
-    this.profileImageUrl = this.currentUser?.profileImageUrl;
-    this.editName = this.currentUser?.name || '';
+    this.loadUserData();
+  }
+
+  private loadUserData(): void {
+    const storedUser = this.transactionService.getCurrentUser();
+    if (storedUser) {
+      this.currentUser = storedUser;
+      this.profileImageUrl = storedUser.profileImageUrl || null;
+      this.editName = storedUser.name || '';
+    }
   }
 
   getInitials(): string {
     if (!this.currentUser?.name) return '?';
-    return this.currentUser.name.charAt(0).toUpperCase();
+    const name = this.currentUser.name || '';
+    return name.charAt(0).toUpperCase();
+  }
+
+  hasProfileImage(): boolean {
+    return !!(this.profileImageUrl && this.profileImageUrl.trim().length > 0);
+  }
+
+  getSafeName(): string {
+    return this.currentUser?.name || 'User';
+  }
+
+  getSafeEmail(): string {
+    return this.currentUser?.email || '';
   }
 
   generateUserId(): string {
@@ -524,14 +543,14 @@ export class ProfileComponent {
   }
 
   getAuthProviderIcon(): string {
-    if (this.currentUser?.authProvider === 'google') return '🔵';
-    if (this.currentUser?.authProvider === 'facebook') return '🟦';
+    if (this.currentUser && this.currentUser.authProvider === 'google') return '🔵';
+    if (this.currentUser && this.currentUser.authProvider === 'facebook') return '🟦';
     return '📧';
   }
 
   getAuthProviderName(): string {
-    if (this.currentUser?.authProvider === 'google') return 'Google';
-    if (this.currentUser?.authProvider === 'facebook') return 'Facebook';
+    if (this.currentUser && this.currentUser.authProvider === 'google') return 'Google';
+    if (this.currentUser && this.currentUser.authProvider === 'facebook') return 'Facebook';
     return 'Email';
   }
 
@@ -596,11 +615,9 @@ export class ProfileComponent {
         }
         this.showEditModal = false;
         this.saving = false;
-        this.cdr.detectChanges();
       },
       error: () => {
         this.saving = false;
-        this.cdr.detectChanges();
       }
     });
   }

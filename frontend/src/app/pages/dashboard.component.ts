@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -687,8 +687,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private transactionService: TransactionService,
-    private router: Router,
-    private cdr: ChangeDetectorRef
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -705,7 +704,6 @@ export class DashboardComponent implements OnInit {
     this.transactionService.getTransactions().subscribe({
       next: (data) => {
         this.transactions = data;
-        this.cdr.detectChanges();
       },
       error: (err) => {
         if (err.status === 401) {
@@ -717,7 +715,6 @@ export class DashboardComponent implements OnInit {
     this.transactionService.getSummary().subscribe({
       next: (data) => {
         this.summary = data;
-        this.cdr.detectChanges();
       }
     });
   }
@@ -754,7 +751,6 @@ export class DashboardComponent implements OnInit {
         this.loadData();
         this.resetForm();
         this.loading = false;
-        this.cdr.detectChanges();
       },
       error: (err) => {
         this.loading = false;

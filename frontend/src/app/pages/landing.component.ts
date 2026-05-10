@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-landing',
@@ -10,8 +10,8 @@ import { RouterLink } from '@angular/router';
       <nav class="navbar">
         <div class="logo">MoneyFlow</div>
         <div class="nav-links">
-          <a routerLink="/login" class="btn-outline">Sign In</a>
-          <a routerLink="/register" class="btn-primary-small">Get Started</a>
+          <a routerLink="/login" class="btn-outline" (click)="forceLogin()">Sign In</a>
+          <a routerLink="/register" class="btn-primary-small" (click)="forceRegister()">Get Started</a>
         </div>
       </nav>
 
@@ -21,8 +21,8 @@ import { RouterLink } from '@angular/router';
           <h1>Take Control of Your <span class="gradient-text">Finances</span></h1>
           <p>Track expenses, manage budgets, and achieve your financial goals with our powerful and intuitive money management platform.</p>
           <div class="hero-buttons">
-            <a routerLink="/register" class="btn-primary">Start Free Trial</a>
-            <a routerLink="/login" class="btn-secondary">Sign In</a>
+            <a routerLink="/register" class="btn-primary" (click)="forceRegister()">Start Free Trial</a>
+            <a routerLink="/login" class="btn-secondary" (click)="forceLogin()">Sign In</a>
           </div>
         </div>
         <div class="hero-graphic">
@@ -472,4 +472,17 @@ import { RouterLink } from '@angular/router';
     }
   `]
 })
-export class LandingComponent {}
+export class LandingComponent {
+  constructor(private router: Router) {}
+
+  forceLogin(): void {
+    // Logout first, then navigate to login
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    this.router.navigate(['/login']);
+  }
+
+  forceRegister(): void {
+    this.router.navigate(['/register']);
+  }
+}
