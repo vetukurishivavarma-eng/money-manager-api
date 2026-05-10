@@ -26,7 +26,7 @@ public class User {
     @Column(name = "auth_provider")
     private String authProvider; // GOOGLE, EMAIL
 
-    @Column(name = "profile_image_url", columnDefinition = "TEXT")
+    @Column(name = "profile_image_url")
     private String profileImageUrl;
 
     @Column(name = "created_at")
