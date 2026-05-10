@@ -41,7 +41,9 @@ public class AuthController {
         user = userRepository.save(user);
 
         String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId(), user.getProfileImageUrl()));
+        String responseProfileImageUrl = (user.getProfileImageUrl() != null && user.getProfileImageUrl().length() < 5000)
+            ? user.getProfileImageUrl() : null;
+        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId(), responseProfileImageUrl));
     }
 
     @PostMapping("/login")
@@ -61,7 +63,9 @@ public class AuthController {
         }
 
         String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail());
-        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId(), user.getProfileImageUrl()));
+        String responseProfileImageUrl = (user.getProfileImageUrl() != null && user.getProfileImageUrl().length() < 5000)
+            ? user.getProfileImageUrl() : null;
+        return ResponseEntity.ok(new AuthResponse(token, user.getEmail(), user.getName(), user.getAuthProvider(), user.getId(), responseProfileImageUrl));
     }
 
     @GetMapping("/me")
