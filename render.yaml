@@ -3,7 +3,6 @@ services:
     name: money-manager-api
     env: docker
     dockerfilePath: ./Dockerfile
-    buildCommand: cd backend && mvn clean package -DskipTests
     healthCheckPath: /
     healthCheckInterval: 30
     autoDeploy: true
@@ -11,7 +10,7 @@ services:
   - type: web
     name: money-manager-frontend
     env: static
-    buildCommand: cd frontend && npm install && npm run build
+    buildCommand: cd frontend && npm install && npm run build -- --output-path=dist/frontend/browser
     staticPublishPath: frontend/dist/frontend/browser
     headers:
       - path: /*
