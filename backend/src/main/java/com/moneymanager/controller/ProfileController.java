@@ -50,6 +50,13 @@ public class ProfileController {
             return ResponseEntity.badRequest().body(error);
         }
 
+        // SECURITY: Reject file paths — only accept base64 data URLs
+        if (!imageUrl.startsWith("data:image")) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Invalid image format. Only base64 images are accepted.");
+            return ResponseEntity.badRequest().body(error);
+        }
+
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             Map<String, String> error = new HashMap<>();
