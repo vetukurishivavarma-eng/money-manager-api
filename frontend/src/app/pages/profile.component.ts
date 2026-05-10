@@ -506,12 +506,21 @@ export class ProfileComponent {
   }
 
   private loadUserData(): void {
+    // First load from local storage for immediate display
     const storedUser = this.transactionService.getCurrentUser();
     if (storedUser) {
       this.currentUser = storedUser;
       this.profileImageUrl = storedUser.profileImageUrl || null;
       this.editName = storedUser.name || '';
     }
+    // Then refresh from server to get latest data (including profileImageUrl from other devices)
+    this.transactionService.refreshProfile().then((user) => {
+      if (user) {
+        this.currentUser = user;
+        this.profileImageUrl = user.profileImageUrl || null;
+        this.editName = user.name || '';
+      }
+    });
   }
 
   getInitials(): string {
